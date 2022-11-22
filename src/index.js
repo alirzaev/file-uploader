@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs/promises');
 const uuid = require('uuid');
 const express = require('express');
 const cors = require('cors');
@@ -16,7 +17,9 @@ app.use(morgan('common'));
 
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) => {
-    cb(null, config.fileStorage);
+    fs.mkdir(config.fileStorage)
+      .catch(() => { })
+      .then(() => cb(null, config.fileStorage))
   },
   filename: (_req, file, cb) => {
     // see https://github.com/expressjs/multer/issues/962
